@@ -1,13 +1,10 @@
-﻿
-
-using Azure.Communication.Email;
+﻿using Azure.Communication.Email;
 using Azure.Messaging.ServiceBus;
 using Azure;
 using EmailProvider_Rika_V2.Models;
+using EmailProvider_Rika_V2.Services;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-
-namespace EmailProvider_Rika_V2.Services;
 
 public class EmailService(EmailClient emailClient, ILogger<EmailService> logger) : IEmailService
 {
