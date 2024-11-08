@@ -1,32 +1,40 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using EmailProvider_Rika_V2.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace EmailProvider_Rika_V2.Functions
+namespace EmailProvider_Rika_V2.Functions;
+
+public class EmailSender(ILogger<EmailSender> logger, IEmailService emailService)
 {
-    public class EmailSender
+    private readonly ILogger<EmailSender> _logger = logger;
+    private readonly IEmailService _emailService = emailService;
+
+    [Function(nameof(EmailSender))]
+    public async Task Run(
+        [ServiceBusTrigger("email_request", Connection = "ServiceBusConnection")]
+        ServiceBusReceivedMessage message,
+        ServiceBusMessageActions messageActions)
     {
-        private readonly ILogger<EmailSender> _logger;
-
-        public EmailSender(ILogger<EmailSender> logger)
+        try
         {
-            _logger = logger;
+            var emailrequest = _emailService.UnpackEmailRequest(message);
+            if (_emailService != null && !string.IsNullOrEmpty(emailrequest.To))
+            {
+                if (_emailService.SendEmail(emailrequest))
+                {
+                    await messageActions.CompleteMessageAsync(message);
+
+                }
+
+
+            }
         }
-
-        [Function(nameof(EmailSender))]
-        public async Task Run(
-            [ServiceBusTrigger("email_request", Connection = "ServiceBusConnection")]
-            ServiceBusReceivedMessage message,
-            ServiceBusMessageActions messageActions)
+        catch (Exception ex)
         {
-            _logger.LogInformation("Message ID: {id}", message.MessageId);
-            _logger.LogInformation("Message Body: {body}", message.Body);
-            _logger.LogInformation("Message Content-Type: {contentType}", message.ContentType);
-
-            // Complete the message
-            await messageActions.CompleteMessageAsync(message);
+            _logger.LogError($"ERROR : EmailSender.Run() :: {ex.Message}");
         }
     }
 }
