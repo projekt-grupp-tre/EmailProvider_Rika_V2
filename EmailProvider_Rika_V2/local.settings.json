@@ -4,7 +4,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "ServiceBusConnection": "Endpoint=sb://sb-emailprovider-v2.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=sBIcy5Zaw85JUZSKVh07clpqUEGvjXDoh+ASbFhN8eg=",
-    "CommunicationServices": "",
+    "CommunicationServices": "endpoint=https://cs-rika-v2.europe.communication.azure.com/;accesskey=FZ9TQTJpxwkdG7POOotPV89xC9p26Vj7NylC3IkEgnAggF8qE71QJQQJ99AKACULyCpq7IbPAAAAAZCSsnpk",
     "SenderAddress": "",
 
 
